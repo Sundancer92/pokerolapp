@@ -1,15 +1,18 @@
 //MUI
-import { Box, Grid, Typography, Paper, Divider } from "@mui/material";
+import { Box, Grid, Typography, Paper, Divider, Button } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 //Custom Comp
 import PokemonImg from "./PokemonImg";
 //Constant
 import { typeColors } from "@/app/constants/typeColors";
 // Custom Helpers
 import { formatString } from "@/helpers/formatString";
-import { getPokemonDescription } from "@/lib/pokemonAPI";
+import { getPokemonDescription, getPokemonSpecies } from "@/lib/pokemonAPI";
 import { PokemonDescription } from "./PokemonDescription";
 // Font
 import styles from "../page.module.css";
+//Next
+import Link from "next/link";
 
 interface PokemonData {
 	pokeData: any;
@@ -19,7 +22,15 @@ interface PokemonData {
 export default async function PokemonDisplay(params: PokemonData) {
 	const pokemon = params.pokeData;
 
-	const pokeDescription = await getPokemonDescription(pokemon.id);
+	// const pokeDescription = await getPokemonDescription(pokemon.id);
+
+	const pokeDescriptionData = getPokemonDescription(pokemon.id);
+	const speciesData = getPokemonSpecies(pokemon.id);
+
+	const [pokemonSpecie, pokeDescription] = await Promise.all([
+		speciesData,
+		pokeDescriptionData,
+	]);
 
 	return (
 		<Box
@@ -27,16 +38,30 @@ export default async function PokemonDisplay(params: PokemonData) {
 			className={styles.pokeGameFont}>
 			<Grid container>
 				<Grid
-					item
+					container
+					direction="row"
+					justifyContent="space-between"
+					alignItems="center"
 					xs={12}
 					sx={{
 						bgcolor: "red",
 						borderBottom: 1,
 						borderColor: "orange",
 					}}>
-					<Typography sx={{ ml: 4 }} className={styles.pokeGameFont}>
-						INFO
-					</Typography>
+					<Grid item>
+						<Grid item xs={4} sx={{ ml: 1 }}>
+							<Link href={"/pokedex/" + pokemonSpecie.generation.name}>
+								<Button sx={{ color: "white" }} size="small">
+									<ArrowBackIcon />
+								</Button>
+							</Link>
+						</Grid>
+					</Grid>
+					<Grid item>
+						<Typography sx={{ mr: 4 }} className={styles.pokeGameFont}>
+							INFO
+						</Typography>
+					</Grid>
 				</Grid>
 				<Grid container sx={{ my: 2 }} justifyContent="space-evenly">
 					<Grid item xs={4} sx={{}}>
@@ -46,9 +71,18 @@ export default async function PokemonDisplay(params: PokemonData) {
 					</Grid>
 					<Grid item xs={6} sx={{ ml: 1 }}>
 						<Paper>
-							<Grid item sx={{ mb: 1 }}>
-								<Typography className={styles.pokeGameFont}>
+							<Grid item sx={{ mb: 0.3 }}>
+								<Typography
+									style={{ fontSize: "12px" }}
+									className={styles.pokeGameFont}>
 									#{pokemon.id} - {formatString(pokemon.name)}
+								</Typography>
+							</Grid>
+							<Grid item sx={{ mb: 1 }}>
+								<Typography
+									style={{ fontSize: "10px", textAlign: "center" }}
+									className={styles.pokeGameFont}>
+									{formatString(pokemonSpecie.genera[7].genus)}
 								</Typography>
 							</Grid>
 						</Paper>
@@ -114,12 +148,6 @@ export default async function PokemonDisplay(params: PokemonData) {
 				}}>
 				<Paper>
 					<PokemonDescription descriptionList={pokeDescription} />
-					{/* <Grid sx={{ pl: 1 }}>
-						Ditto reorganiza la estructura de sus células para
-						adoptar\notras formas. Pero, como intente transformarse en
-						algo\nguiándose por los datos que tenga almacenados en
-						la\nmemoria, habrá detalles que se le escapen.
-					</Grid> */}
 				</Paper>
 			</Grid>
 		</Box>

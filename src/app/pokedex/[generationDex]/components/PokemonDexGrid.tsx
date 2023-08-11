@@ -37,6 +37,7 @@ export function PokemonDexGrid({
 							item
 							key={item.name + "card"}
 							xs={3}
+							lg={1}
 							sx={{ border: "" }}>
 							<PokemonCard
 								itemName={item.name}

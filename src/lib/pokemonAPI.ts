@@ -20,3 +20,9 @@ export async function getPokemonDescription(pokeId: number) {
 	);
 	return spanish;
 }
+
+export async function getPokemonSpecies(pokeId: number) {
+	const response = await fetch(POKEMON_API + "pokemon-species/" + pokeId);
+	const data = await response.json();
+	return data;
+}

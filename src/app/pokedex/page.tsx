@@ -20,7 +20,7 @@ export default function Podekex() {
 
 	return (
 		<Box
-			sx={{ m: 2 }}
+			sx={{ m: 2, maxWidth: "250px", mx: "auto" }}
 			className={styles.pokeGameFont}
 			style={{ textAlign: "center" }}>
 			<Grid sx={{ mb: 2 }}>
