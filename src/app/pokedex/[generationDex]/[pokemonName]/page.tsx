@@ -17,7 +17,7 @@ export default async function Pokemon({
 
 	return (
 		<div className={styles.pokeGameFont}>
-			<div>
+			<div style={{ maxWidth: "500px" }}>
 				<PokemonDisplay pokeData={pokemonDetails} />
 			</div>
 		</div>
